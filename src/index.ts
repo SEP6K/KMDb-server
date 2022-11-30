@@ -16,7 +16,7 @@ app.get("/", async (req, res) => {
       console.log(res.title);
       return res.title;
     });
-  res.send(movie ?? "hello world");
+  res.send("hello world");
 });
 
 app.listen(port, () => {
