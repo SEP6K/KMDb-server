@@ -1,7 +1,9 @@
+import dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import { Directors, Movies, People, Ratings, Stars } from "./models.js";
+dotenv.config();
 
-export const dataSource = new DataSource({
+const dataSource = new DataSource({
   type: "postgres",
   host: "34.159.156.47",
   port: parseInt(process.env.DB_PORT!),
@@ -10,3 +12,5 @@ export const dataSource = new DataSource({
   database: process.env.DB_DATABASE,
   entities: [Directors, Movies, People, Ratings, Stars],
 });
+
+export const connection = dataSource.initialize();

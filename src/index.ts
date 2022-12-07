@@ -1,16 +1,21 @@
 import express from "express";
+import dotenv from "dotenv";
 import "reflect-metadata";
-import { createQueryBuilder } from "typeorm";
-import { dataSource } from "./models/data-source.js";
+import { connection } from "./models/data-source.js";
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.get("/", async (req, res) => {
-  dataSource.initialize().then((ds) => {
+  console.log(process.env.DB_HOST);
+  connection.then((ds) => {
     // const query = createQueryBuilder("movies").getMany();
-    const result = ds.getRepository("Movies").findOneBy({ id: 1 });
-    console.log(result);
+    const movieRepo = ds.getRepository("Movies");
+
+    movieRepo.findOneBy({ movie_id: 15414 }).then((res) => {
+      console.log(res);
+    });
   });
 });
 

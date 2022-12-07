@@ -21,7 +21,7 @@ export class Directors {
 @Entity()
 export class Movies {
   @PrimaryColumn()
-  id!: number;
+  movie_id!: number;
   @Column()
   title!: string;
   @Column()
