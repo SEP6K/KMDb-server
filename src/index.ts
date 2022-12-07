@@ -3,7 +3,9 @@ import express from "express";
 import "reflect-metadata";
 import { connection } from "./models/data-source.js";
 import { Movies } from "./models/models.js";
-dotenv.config();
+dotenv.config({
+  debug: true,
+});
 
 const app = express();
 const port = process.env.PORT || 3000;
