@@ -2,19 +2,19 @@ name: action
 description:
 
 input:
-  DB_HOST:
+  host:
     description: Database ip address
     required: true
-  DB_PORT:
+  port:
     description: Database port
     required: true
-  DB_USERNAME:
+  username:
     description: Database username
     required: true
-  DB_PASSWORD:
+  password:
     description: Database password
     required: true
-  DB_DATABASE:
+  database:
     description: Database database
     required: true
 
@@ -29,13 +29,13 @@ runs:
       with:
         node-version: "18.x"
 
-    - name: Use cached node_modules
-      uses: actions/cache@master
-      with:
-        path: node_modules
-        key: nodeModules-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          nodeModules-
+    # - name: Use cached node_modules
+    #   uses: actions/cache@master
+    #   with:
+    #     path: node_modules
+    #     key: nodeModules-${{ hashFiles('**/yarn.lock') }}
+    #     restore-keys: |
+    #       nodeModules-
 
     - name: Install dependencies
       shell: bash
@@ -46,11 +46,11 @@ runs:
     - name: Build Development
       shell: bash
       env:
-        DB_HOST: ${{inputs.DB_HOST}}
-        DB_PORT: ${{inputs.DB_PORT}}
-        DB_USERNAME: ${{inputs.DB_USERNAME}}
-        DB_PASSWORD: ${{inputs.DB_PASSWORD}}
-        DB_DATABASE: ${{inputs.DB_DATABASE}}
+        DB_HOST: ${{inputs.host}}
+        DB_PORT: ${{inputs.port}}
+        DB_USERNAME: ${{inputs.username}}
+        DB_PASSWORD: ${{inputs.password}}
+        DB_DATABASE: ${{inputs.database}}
       run: |
         echo "DB_HOST=$DB_HOST
         DB_PORT=$DB_PORT
