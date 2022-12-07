@@ -19,7 +19,7 @@ input:
     required: true
 
 runs:
-  using: compostite
+  using: "compostite"
   steps:
     - name: Checkout Repo
       uses: actions/checkout@main
