@@ -20,9 +20,6 @@ app.get("/movie/year", async (req, res) => {
   connection.then((ds) => {
     const movieRepo = ds.getRepository(Movies);
 
-    movieRepo.findOneBy({ movie_id: 15414 }).then((res) => {
-      console.log(res);
-    });
     movieRepo
       .createQueryBuilder("movie")
       .where("movie.year = :year", { year: 1999 })
