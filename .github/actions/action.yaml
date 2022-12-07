@@ -56,7 +56,8 @@ runs:
         DB_PORT=$DB_PORT
         DB_USERNAME=$DB_USERNAME
         DB_PASSWORD=$DB_PASSWORD
-        DB_DATABASE=$DB_DATABASE" >> .env
+        DB_DATABASE=$DB_DATABASE
+        PORT=3000" >> .env
         npm run build
 
     - name: Archive Production Artifact
