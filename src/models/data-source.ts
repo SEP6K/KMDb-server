@@ -4,6 +4,7 @@ import { Directors, Movies, People, Ratings, Stars } from "./models.js";
 
 dotenv.config({
   debug: true,
+  path: "../../.env",
 });
 
 const dataSource = new DataSource({
