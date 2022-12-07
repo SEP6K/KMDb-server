@@ -1,5 +1,8 @@
+import dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import { Directors, Movies, People, Ratings, Stars } from "./models.js";
+
+dotenv.config();
 
 const dataSource = new DataSource({
   type: "postgres",
