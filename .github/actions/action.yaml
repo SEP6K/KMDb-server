@@ -2,19 +2,19 @@ name: action
 description:
 
 inputs:
-  host:
+  HOST:
     description: Database ip address
     required: true
-  port:
+  PORT:
     description: Database port
     required: true
-  username:
+  USERNAME:
     description: Database username
     required: true
-  password:
+  PASSWORD:
     description: Database password
     required: true
-  database:
+  DATABASE:
     description: Database database
     required: true
 
@@ -46,11 +46,11 @@ runs:
     - name: Build Development
       shell: bash
       env:
-        DB_HOST: ${{inputs.host}}
-        DB_PORT: ${{inputs.port}}
-        DB_USERNAME: ${{inputs.username}}
-        DB_PASSWORD: ${{inputs.password}}
-        DB_DATABASE: ${{inputs.database}}
+        DB_HOST: ${{inputs.HOST}}
+        DB_PORT: ${{inputs.PORT}}
+        DB_USERNAME: ${{inputs.USERNAME}}
+        DB_PASSWORD: ${{inputs.PASSWORD}}
+        DB_DATABASE: ${{inputs.DATABASE}}
       run: |
         echo "DB_HOST=$DB_HOST
         DB_PORT=$DB_PORT
