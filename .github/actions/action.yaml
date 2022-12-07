@@ -38,6 +38,7 @@ runs:
           nodeModules-
 
     - name: Install dependencies
+      shell: bash
       run: npm install
       env:
         CI: true
