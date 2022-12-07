@@ -50,5 +50,5 @@ app.get("/movie/title", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("listening on", 3000);
+  console.log("listening on", port);
 });
