@@ -1,5 +1,5 @@
-import express from "express";
 import dotenv from "dotenv";
+import express from "express";
 import "reflect-metadata";
 import { connection } from "./models/data-source.js";
 import { Movies } from "./models/models.js";
@@ -7,6 +7,11 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.get("/", async (req, res) => {
+  console.log(process.env.DB_HOST);
+  res.send("Hello world");
+});
 
 app.get("/movie/year", async (req, res) => {
   console.log(process.env.DB_HOST);
@@ -20,8 +25,9 @@ app.get("/movie/year", async (req, res) => {
       .createQueryBuilder("movie")
       .where("movie.year = :year", { year: 1999 })
       .getMany()
-      .then((res) => {
-        console.log(res);
+      .then((movies) => {
+        console.log(movies);
+        res.send(movies);
       });
   });
 });
@@ -36,8 +42,9 @@ app.get("/movie/title", async (req, res) => {
       .where("movie.title LIKE :title", { title: `%${title}%` })
       .take(5)
       .getMany()
-      .then((res) => {
-        console.log(res);
+      .then((movies) => {
+        console.log(movies);
+        res.send(movies);
       });
   });
 });
