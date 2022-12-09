@@ -13,7 +13,15 @@ const dataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [Directors, Movies, People, Ratings, Stars],
+  entities: [
+    Directors,
+    Movies,
+    People,
+    Ratings,
+    Stars,
+    UserInfo,
+    FavouriteMovies,
+  ],
 });
 
 export const connection = dataSource.initialize();

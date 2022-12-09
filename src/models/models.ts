@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { userInfo } from "os";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from "typeorm";
 
 @Entity()
 export class People {
@@ -44,4 +53,26 @@ export class Stars {
   movie_id!: number;
   @PrimaryColumn()
   person_id!: number;
+}
+
+@Entity({ name: "userinfo" })
+export class UserInfo {
+  @PrimaryColumn()
+  user_id!: number;
+  @Column()
+  first_name!: string;
+  @Column()
+  last_name!: string;
+  @Column()
+  gender!: string;
+  @Column()
+  date_of_birth!: string;
+}
+
+@Entity({ name: "favouritemovies" })
+export class FavouriteMovies {
+  @PrimaryColumn()
+  user_id!: number;
+  @PrimaryColumn()
+  movie_id!: number;
 }

@@ -1,9 +1,13 @@
 import express from "express";
 import "reflect-metadata";
+import { connection } from "./models/data-source.js";
+import { Movies, UserInfo, FavouriteMovies } from "./models/models.js";
+dotenv.config();
 import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
 import * as sqlService from "./services/sqlService.js";
 
 const app = express();
+app.use(express.json());
 const port = process.env.PORT || 3000;
 
 app.get("/", async (req, res) => {
@@ -42,6 +46,34 @@ app.get("/movie/enriched/:id", async (req, res) => {
 
   if (enrichedMovie) res.send(enrichedMovie);
   else res.status(404).send();
+});
+
+app.post("/userinfo", async (req, res) => {
+  const userinformation: UserInfo = req.body;
+
+  await connection.then((ds) => {
+    const userinfo = ds.getRepository(UserInfo);
+    userinfo.save({
+      user_id: userinformation.user_id,
+      first_name: userinformation.first_name,
+      last_name: userinformation.last_name,
+      gender: userinformation.gender,
+      date_of_birth: userinformation.date_of_birth,
+    });
+  });
+});
+
+app.post("/favouritemovies", async (req, res) => {
+  const favouritemoviesexpress: FavouriteMovies = req.body;
+
+  await connection.then((ds) => {
+    const favemovies = ds.getRepository(FavouriteMovies);
+    favemovies.save({
+      user_id: favouritemoviesexpress.user_id,
+      movie_id: favouritemoviesexpress.movie_id,
+    });
+  });
+  res.send();
 });
 
 app.listen(port, () => {
