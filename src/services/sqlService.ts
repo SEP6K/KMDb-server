@@ -33,27 +33,6 @@ export async function queryMoviesByYear(year: number): Promise<Movies[]> {
   });
 }
 
-export async function queryMoviesByTitleAndYear(
-  title: string,
-  year: number
-): Promise<Movies[]> {
-  return await connection.then((ds) => {
-    const movieRepo = ds.getRepository(Movies);
-
-    return movieRepo
-      .createQueryBuilder("movie")
-      .where("movie.title LIKE :title AND movie.year = :year", {
-        title: `%${title}%`,
-        year: year,
-      })
-      .take(5)
-      .getMany()
-      .then((movies) => {
-        return movies;
-      });
-  });
-}
-
 export async function queryMovieById(id: number): Promise<Movies> {
   return await connection.then((ds) => {
     const movieRepo = ds.getRepository(Movies);

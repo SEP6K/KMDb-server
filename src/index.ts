@@ -16,35 +16,32 @@ app.get("/", async (req, res) => {
   res.send("Hello world");
 });
 
-app.get("/movie", async (req, res) => {
-  const titleQuery = req.query.title ? req.query.title.toString() : undefined;
+app.get("/movie/title/:title", async (req, res) => {
+  const titleQuery = req.params.title ? req.params.title.toString() : undefined;
   console.log(titleQuery);
 
-  const yearQuery = req.query.year
-    ? parseInt(req.query.year.toString())
+  const movies = await sqlService.queryMoviesByTitle(titleQuery);
+  res.send(movies);
+});
+
+app.get("/movie/year/:year", async (req, res) => {
+  const yearQuery = req.params.year
+    ? parseInt(req.params.year.toString())
     : undefined;
   console.log(yearQuery);
 
-  if (titleQuery) {
-    if (yearQuery) {
-      // query both by year and title
-      const movies = await sqlService.queryMoviesByTitleAndYear(
-        titleQuery,
-        yearQuery
-      );
-      res.send(movies);
-    } else {
-      // query only by title
-      const movies = await sqlService.queryMoviesByTitle(titleQuery);
-      res.send(movies);
-    }
-  } else {
-    if (yearQuery) {
-      // query only by year
-      const movies = await sqlService.queryMoviesByYear(yearQuery);
-      res.send(movies);
-    }
-  }
+  const movies = await sqlService.queryMoviesByYear(yearQuery);
+  res.send(movies);
+});
+
+app.get("/movie/id/:id", async (req, res) => {
+  const idQuery = req.params.id
+    ? parseInt(req.params.id.toString())
+    : undefined;
+  console.log(idQuery);
+
+  const movie = await sqlService.queryMovieById(idQuery);
+  res.send(movie);
 });
 
 app.get("/movie/enriched/:id", async (req, res) => {
