@@ -45,3 +45,25 @@ export class Stars {
   @PrimaryColumn()
   person_id!: number;
 }
+
+@Entity({ name: "userinfo" })
+export class UserInfo {
+  @PrimaryColumn()
+  user_id!: number;
+  @Column()
+  first_name!: string;
+  @Column()
+  last_name!: string;
+  @Column()
+  gender!: string;
+  @Column()
+  date_of_birth!: string;
+}
+
+@Entity()
+export class FavouriteMovies {
+  @PrimaryColumn()
+  user_id!: number;
+  @PrimaryColumn()
+  movie_id!: number;
+}

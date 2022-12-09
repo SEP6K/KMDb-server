@@ -1,6 +1,14 @@
 import dotenv from "dotenv";
 import { DataSource } from "typeorm";
-import { Directors, Movies, People, Ratings, Stars } from "./models.js";
+import {
+  Directors,
+  FavouriteMovies,
+  Movies,
+  People,
+  Ratings,
+  Stars,
+  UserInfo,
+} from "./models.js";
 dotenv.config();
 
 const dataSource = new DataSource({
@@ -10,7 +18,15 @@ const dataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [Directors, Movies, People, Ratings, Stars],
+  entities: [
+    Directors,
+    Movies,
+    People,
+    Ratings,
+    Stars,
+    UserInfo,
+    FavouriteMovies,
+  ],
 });
 
 export const connection = dataSource.initialize();
