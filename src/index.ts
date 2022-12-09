@@ -6,6 +6,7 @@ import { Movies, UserInfo, FavouriteMovies } from "./models/models.js";
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 const port = process.env.PORT || 3000;
 
 app.get("/movie/year", async (req, res) => {
@@ -43,26 +44,31 @@ app.get("/movie/title", async (req, res) => {
 });
 
 app.post("/userinfo", async (req, res) => {
+  const userinformation: UserInfo = req.body;
+
   await connection.then((ds) => {
     const userinfo = ds.getRepository(UserInfo);
     userinfo.save({
-      user_id: 1,
-      first_name: "john",
-      last_name: "doe",
-      gender: "M",
-      date_of_birth: "14 dec 2020",
+      user_id: userinformation.user_id,
+      first_name: userinformation.first_name,
+      last_name: userinformation.last_name,
+      gender: userinformation.gender,
+      date_of_birth: userinformation.date_of_birth,
     });
   });
 });
 
 app.post("/favouritemovies", async (req, res) => {
+  const favouritemoviesexpress: FavouriteMovies = req.body;
+
   await connection.then((ds) => {
     const favemovies = ds.getRepository(FavouriteMovies);
     favemovies.save({
-      user_id: 1,
-      movie_id: 65808,
+      user_id: favouritemoviesexpress.user_id,
+      movie_id: favouritemoviesexpress.movie_id,
     });
   });
+  res.send();
 });
 
 app.listen(port, () => {
