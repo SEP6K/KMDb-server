@@ -1,6 +1,6 @@
 import * as omdbApi from "../apis/omdbApi.js";
 import { connection } from "../models/data-source.js";
-import { Movies, Ratings } from "../models/models.js";
+import { Movies, People, Ratings } from "../models/models.js";
 import * as sqlService from "./sqlService.js";
 
 type EnrichedMovie = {
@@ -8,7 +8,7 @@ type EnrichedMovie = {
   releaseDate: string;
   runtime: string;
   genre: string;
-  director: string;
+  director: Director;
   writers: string;
   actors: string;
   plotDescription: string;
@@ -20,18 +20,27 @@ type EnrichedMovie = {
   rating: number;
 };
 
+type Director = {
+  id: number;
+  name: string;
+  birth: number;
+};
+
 export async function enrichMovie(movieId: number): Promise<EnrichedMovie> {
   const dbMovie = await sqlService.queryMovieById(movieId);
   const dbRating = await sqlService.queryRatingByMovieId(movieId);
+  const dbDirector = await sqlService.getMovieDirector(movieId);
   const omdbMovie = await omdbApi.getMovieById(movieId);
 
-  if (dbMovie && omdbMovie) return mapMovie(dbMovie, dbRating, omdbMovie);
+  if (dbMovie && omdbMovie)
+    return mapMovie(dbMovie, dbRating, dbDirector, omdbMovie);
   else return null;
 }
 
 function mapMovie(
   dbMovie: Movies,
   dbRating: Ratings,
+  dbDirector: People,
   omdbMovie: omdbApi.OmdbMovieResponse
 ): EnrichedMovie {
   const mappedMovie: EnrichedMovie = {
@@ -41,7 +50,11 @@ function mapMovie(
     releaseDate: omdbMovie.Released,
     runtime: omdbMovie.Runtime,
     genre: omdbMovie.Genre,
-    director: omdbMovie.Director,
+    director: {
+      id: dbDirector.id,
+      name: dbDirector.name,
+      birth: dbDirector.birth,
+    } as Director,
     writers: omdbMovie.Writer,
     actors: omdbMovie.Actors,
     plotDescription: omdbMovie.Plot,

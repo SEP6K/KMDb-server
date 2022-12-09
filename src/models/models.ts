@@ -15,7 +15,7 @@ export class People {
   @Column()
   name!: string;
   @Column()
-  birth!: string;
+  birth!: number;
 }
 
 @Entity()
