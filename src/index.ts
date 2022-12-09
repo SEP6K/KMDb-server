@@ -42,7 +42,7 @@ app.get("/movie/title", async (req, res) => {
   });
 });
 
-app.get("/userinfo", async (req, res) => {
+app.post("/userinfo", async (req, res) => {
   await connection.then((ds) => {
     const userinfo = ds.getRepository(UserInfo);
     userinfo.save({
@@ -55,7 +55,7 @@ app.get("/userinfo", async (req, res) => {
   });
 });
 
-app.get("/favouritemovies", async (req, res) => {
+app.post("/favouritemovies", async (req, res) => {
   await connection.then((ds) => {
     const favemovies = ds.getRepository(FavouriteMovies);
     favemovies.save({
