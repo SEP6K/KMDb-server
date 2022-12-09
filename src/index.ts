@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import "reflect-metadata";
 import { connection } from "./models/data-source.js";
-import { Movies, UserInfo } from "./models/models.js";
+import { Movies, UserInfo, FavouriteMovies } from "./models/models.js";
 dotenv.config();
 
 const app = express();
@@ -54,6 +54,17 @@ app.get("/userinfo", async (req, res) => {
     });
   });
 });
+
+app.get("/favouritemovies", async (req, res) => {
+  await connection.then((ds) => {
+    const favemovies = ds.getRepository(FavouriteMovies);
+    favemovies.save({
+      user_id: 1,
+      movie_id: 65808,
+    });
+  });
+});
+
 app.listen(port, () => {
   console.log("listening on", 3000);
 });

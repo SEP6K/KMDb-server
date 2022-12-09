@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { userInfo } from "os";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from "typeorm";
 
 @Entity()
 export class People {
@@ -60,7 +69,7 @@ export class UserInfo {
   date_of_birth!: string;
 }
 
-@Entity()
+@Entity({ name: "favouritemovies" })
 export class FavouriteMovies {
   @PrimaryColumn()
   user_id!: number;
