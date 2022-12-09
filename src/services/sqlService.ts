@@ -1,5 +1,5 @@
 import { connection } from "../models/data-source.js";
-import { Movies } from "../models/models.js";
+import { Movies, Ratings } from "../models/models.js";
 
 export async function queryMoviesByTitle(title: string): Promise<Movies[]> {
   console.log("query movie by title" + title);
@@ -43,6 +43,20 @@ export async function queryMovieById(id: number): Promise<Movies> {
       .getOne()
       .then((movieQueriedById) => {
         return movieQueriedById;
+      });
+  });
+}
+
+export async function queryRatingByMovieId(id: number): Promise<Ratings> {
+  return await connection.then((ds) => {
+    const ratingsRepo = ds.getRepository(Ratings);
+
+    return ratingsRepo
+      .createQueryBuilder("rating")
+      .where("rating.movie_id = :id", { id: id })
+      .getOne()
+      .then((rating) => {
+        return rating;
       });
   });
 }

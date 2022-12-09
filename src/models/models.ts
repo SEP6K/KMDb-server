@@ -3,10 +3,9 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryColumn,
+  Relation,
 } from "typeorm";
 
 @Entity()
@@ -35,6 +34,9 @@ export class Movies {
   title!: string;
   @Column()
   year!: number;
+  // @OneToOne(() => Movies)
+  // @JoinColumn()
+  // rating!: Relation<Ratings>;
 }
 
 @Entity()
@@ -45,6 +47,9 @@ export class Ratings {
   rating!: number;
   @Column()
   votes!: number;
+  // @OneToOne(() => Movies)
+  // @JoinColumn()
+  // movie!: Relation<Movies>;
 }
 
 @Entity()

@@ -1,6 +1,6 @@
 import * as omdbApi from "../apis/omdbApi.js";
 import { connection } from "../models/data-source.js";
-import { Movies } from "../models/models.js";
+import { Movies, Ratings } from "../models/models.js";
 import * as sqlService from "./sqlService.js";
 
 type EnrichedMovie = {
@@ -17,18 +17,21 @@ type EnrichedMovie = {
   boxOffice: string;
   id: number;
   year: number;
+  rating: number;
 };
 
-export async function enrichMovie(id: number): Promise<EnrichedMovie> {
-  const dbMovie = await sqlService.queryMovieById(id);
-  const omdbMovie = await omdbApi.getMovieById(id);
+export async function enrichMovie(movieId: number): Promise<EnrichedMovie> {
+  const dbMovie = await sqlService.queryMovieById(movieId);
+  const dbRating = await sqlService.queryRatingByMovieId(movieId);
+  const omdbMovie = await omdbApi.getMovieById(movieId);
 
-  if (dbMovie && omdbMovie) return mapMovie(dbMovie, omdbMovie);
+  if (dbMovie && omdbMovie) return mapMovie(dbMovie, dbRating, omdbMovie);
   else return null;
 }
 
 function mapMovie(
   dbMovie: Movies,
+  dbRating: Ratings,
   omdbMovie: omdbApi.OmdbMovieResponse
 ): EnrichedMovie {
   const mappedMovie: EnrichedMovie = {
@@ -45,6 +48,7 @@ function mapMovie(
     awards: omdbMovie.Awards,
     posterUrl: omdbMovie.Poster,
     boxOffice: omdbMovie.BoxOffice,
+    rating: dbRating.rating,
   };
 
   return mappedMovie;
