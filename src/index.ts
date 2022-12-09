@@ -28,15 +28,21 @@ app.get("/movie", async (req, res) => {
   if (titleQuery) {
     if (yearQuery) {
       // query both by year and title
-      sqlService.queryMoviesByTitleAndYear(titleQuery, yearQuery);
+      const movies = await sqlService.queryMoviesByTitleAndYear(
+        titleQuery,
+        yearQuery
+      );
+      res.send(movies);
     } else {
       // query only by title
-      sqlService.queryMoviesByTitle(titleQuery);
+      const movies = await sqlService.queryMoviesByTitle(titleQuery);
+      res.send(movies);
     }
   } else {
     if (yearQuery) {
       // query only by year
-      sqlService.queryMovieByYear(yearQuery);
+      const movies = await sqlService.queryMoviesByYear(yearQuery);
+      res.send(movies);
     }
   }
 });

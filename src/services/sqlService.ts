@@ -1,8 +1,9 @@
 import { connection } from "../models/data-source.js";
 import { Movies } from "../models/models.js";
 
-export function queryMoviesByTitle(title: string) {
-  return connection.then((ds) => {
+export async function queryMoviesByTitle(title: string): Promise<Movies[]> {
+  console.log("query movie by title" + title);
+  return await connection.then((ds) => {
     const movieRepo = ds.getRepository(Movies);
 
     return movieRepo
@@ -11,16 +12,17 @@ export function queryMoviesByTitle(title: string) {
       .take(5)
       .getMany()
       .then((movies) => {
+        console.log(movies);
         return movies;
       });
   });
 }
 
-export function queryMovieByYear(year: number) {
-  return connection.then((ds) => {
+export async function queryMoviesByYear(year: number): Promise<Movies[]> {
+  return await connection.then((ds) => {
     const movieRepo = ds.getRepository(Movies);
 
-    movieRepo
+    return movieRepo
       .createQueryBuilder("movie")
       .where("movie.year = :year", { year: year })
       .take(5)
@@ -31,11 +33,14 @@ export function queryMovieByYear(year: number) {
   });
 }
 
-export function queryMoviesByTitleAndYear(title: string, year: number) {
-  return connection.then((ds) => {
+export async function queryMoviesByTitleAndYear(
+  title: string,
+  year: number
+): Promise<Movies[]> {
+  return await connection.then((ds) => {
     const movieRepo = ds.getRepository(Movies);
 
-    movieRepo
+    return movieRepo
       .createQueryBuilder("movie")
       .where("movie.title LIKE :title AND movie.year = :year", {
         title: `%${title}%`,
