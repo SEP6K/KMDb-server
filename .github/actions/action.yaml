@@ -1,0 +1,67 @@
+name: action
+description:
+
+inputs:
+  HOST:
+    description: Database ip address
+    required: true
+  PORT:
+    description: Database port
+    required: true
+  USERNAME:
+    description: Database username
+    required: true
+  PASSWORD:
+    description: Database password
+    required: true
+  DATABASE:
+    description: Database database
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Repo
+      uses: actions/checkout@main
+
+    - name: Setup Node.js (NPM)
+      uses: actions/setup-node@master
+      with:
+        node-version: "18.x"
+
+    # - name: Use cached node_modules
+    #   uses: actions/cache@master
+    #   with:
+    #     path: node_modules
+    #     key: nodeModules-${{ hashFiles('**/yarn.lock') }}
+    #     restore-keys: |
+    #       nodeModules-
+
+    - name: Install dependencies
+      shell: bash
+      run: npm install
+      env:
+        CI: true
+
+    - name: Build Development
+      shell: bash
+      env:
+        DB_HOST: ${{inputs.HOST}}
+        DB_PORT: ${{inputs.PORT}}
+        DB_USERNAME: ${{inputs.USERNAME}}
+        DB_PASSWORD: ${{inputs.PASSWORD}}
+        DB_DATABASE: ${{inputs.DATABASE}}
+      run: |
+        echo "DB_HOST=$DB_HOST
+        DB_PORT=$DB_PORT
+        DB_USERNAME=$DB_USERNAME
+        DB_PASSWORD=$DB_PASSWORD
+        DB_DATABASE=$DB_DATABASE
+        PORT=3000" >> .env
+        npm run build
+
+    - name: Archive Production Artifact
+      uses: actions/upload-artifact@main
+      with:
+        name: build
+        path: dist
