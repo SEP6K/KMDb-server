@@ -1,7 +1,7 @@
 import express from "express";
 import "reflect-metadata";
-import { connection } from "./models/data-source.js";
-import { Movies } from "./models/models.js";
+import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
+import * as sqlService from "./services/sqlService.js";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,55 +12,36 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/movie", async (req, res) => {
-  const titleQuery = req.query.title;
+  const titleQuery = req.query.title ? req.query.title.toString() : undefined;
   console.log(titleQuery);
-  const yearQuery = req.query.year;
+
+  const yearQuery = req.query.year
+    ? parseInt(req.query.year.toString())
+    : undefined;
   console.log(yearQuery);
 
-  connection.then((ds) => {
-    const movieRepo = ds.getRepository(Movies);
-
-    if (titleQuery) {
-      if (yearQuery) {
-        // query both by year and title
-        movieRepo
-          .createQueryBuilder("movie")
-          .where("movie.title LIKE :title AND movie.year = :year", {
-            title: `%${titleQuery}%`,
-            year: yearQuery,
-          })
-          .take(5)
-          .getMany()
-          .then((movies) => {
-            console.log(movies);
-            res.send(movies);
-          });
-      } else {
-        // query only by title
-        movieRepo
-          .createQueryBuilder("movie")
-          .where("movie.title LIKE :title", { title: `%${titleQuery}%` })
-          .take(5)
-          .getMany()
-          .then((movies) => {
-            console.log(movies);
-            res.send(movies);
-          });
-      }
+  if (titleQuery) {
+    if (yearQuery) {
+      // query both by year and title
+      sqlService.queryMoviesByTitleAndYear(titleQuery, yearQuery);
     } else {
-      if (yearQuery) {
-        // query only by year
-        movieRepo
-          .createQueryBuilder("movie")
-          .where("movie.year = :year", { year: yearQuery })
-          .getMany()
-          .then((movies) => {
-            console.log(movies);
-            res.send(movies);
-          });
-      }
+      // query only by title
+      sqlService.queryMoviesByTitle(titleQuery);
     }
-  });
+  } else {
+    if (yearQuery) {
+      // query only by year
+      sqlService.queryMovieByYear(yearQuery);
+    }
+  }
+});
+
+app.get("/movie/enriched/:id", async (req, res) => {
+  const idParam = parseInt(req.params.id.toString());
+  const enrichedMovie = await movieEnrichmentService.enrichMovie(idParam);
+
+  if (enrichedMovie) res.send(enrichedMovie);
+  else res.status(404).send();
 });
 
 app.listen(port, () => {
