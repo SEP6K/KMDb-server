@@ -1,10 +1,11 @@
+import * as dotenv from "dotenv";
 import express from "express";
 import "reflect-metadata";
 import { connection } from "./models/data-source.js";
-import { Movies, UserInfo, FavouriteMovies } from "./models/models.js";
-dotenv.config();
+import { FavouriteMovies, Movies, UserInfo } from "./models/models.js";
 import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
 import * as sqlService from "./services/sqlService.js";
+dotenv.config();
 
 const app = express();
 app.use(express.json());

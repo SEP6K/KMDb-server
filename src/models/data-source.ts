@@ -1,6 +1,14 @@
 import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
-import { Directors, Movies, People, Ratings, Stars } from "./models.js";
+import {
+  Directors,
+  FavouriteMovies,
+  Movies,
+  People,
+  Ratings,
+  Stars,
+  UserInfo,
+} from "./models.js";
 
 dotenv.config({
   debug: true,
