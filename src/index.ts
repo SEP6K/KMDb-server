@@ -1,46 +1,51 @@
 import express from "express";
-import dotenv from "dotenv";
 import "reflect-metadata";
 import { connection } from "./models/data-source.js";
 import { Movies, UserInfo, FavouriteMovies } from "./models/models.js";
 dotenv.config();
+import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
+import * as sqlService from "./services/sqlService.js";
 
 const app = express();
 app.use(express.json());
 const port = process.env.PORT || 3000;
 
-app.get("/movie/year", async (req, res) => {
+app.get("/", async (req, res) => {
   console.log(process.env.DB_HOST);
-  connection.then((ds) => {
-    const movieRepo = ds.getRepository(Movies);
-
-    movieRepo.findOneBy({ movie_id: 15414 }).then((res) => {
-      console.log(res);
-    });
-    movieRepo
-      .createQueryBuilder("movie")
-      .where("movie.year = :year", { year: 1999 })
-      .getMany()
-      .then((res) => {
-        console.log(res);
-      });
-  });
+  res.send("Hello world");
 });
 
-app.get("/movie/title", async (req, res) => {
-  const title = req.query.title;
-  connection.then((ds) => {
-    const movieRepo = ds.getRepository(Movies);
+app.get("/movie", async (req, res) => {
+  const titleQuery = req.query.title ? req.query.title.toString() : undefined;
+  console.log(titleQuery);
 
-    movieRepo
-      .createQueryBuilder("movie")
-      .where("movie.title LIKE :title", { title: `%${title}%` })
-      .take(5)
-      .getMany()
-      .then((res) => {
-        console.log(res);
-      });
-  });
+  const yearQuery = req.query.year
+    ? parseInt(req.query.year.toString())
+    : undefined;
+  console.log(yearQuery);
+
+  if (titleQuery) {
+    if (yearQuery) {
+      // query both by year and title
+      sqlService.queryMoviesByTitleAndYear(titleQuery, yearQuery);
+    } else {
+      // query only by title
+      sqlService.queryMoviesByTitle(titleQuery);
+    }
+  } else {
+    if (yearQuery) {
+      // query only by year
+      sqlService.queryMovieByYear(yearQuery);
+    }
+  }
+});
+
+app.get("/movie/enriched/:id", async (req, res) => {
+  const idParam = parseInt(req.params.id.toString());
+  const enrichedMovie = await movieEnrichmentService.enrichMovie(idParam);
+
+  if (enrichedMovie) res.send(enrichedMovie);
+  else res.status(404).send();
 });
 
 app.post("/userinfo", async (req, res) => {

@@ -19,11 +19,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions
         with:
-          DB_HOST: ${{secrets.DB_HOST}}
-          DB_PORT: ${{secrets.DB_PORT}}
-          DB_USERNAME: ${{secrets.DB_USERNAME}}
-          DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-          DB_DATABASE: ${{secrets.DB_DATABASE}}
+          host: ${{secrets.DB_HOST}}
+          port: ${{secrets.DB_PORT}}
+          username: ${{secrets.DB_USERNAME}}
+          password: ${{secrets.DB_PASSWORD}}
+          database: ${{secrets.DB_DATABASE}}
 
   deploy-gcr:
     name: Deploy to GCR

@@ -1,20 +1,20 @@
 name: action
 description:
 
-input:
-  DB_HOST:
+inputs:
+  HOST:
     description: Database ip address
     required: true
-  DB_PORT:
+  PORT:
     description: Database port
     required: true
-  DB_USERNAME:
+  USERNAME:
     description: Database username
     required: true
-  DB_PASSWORD:
+  PASSWORD:
     description: Database password
     required: true
-  DB_DATABASE:
+  DATABASE:
     description: Database database
     required: true
 
@@ -29,13 +29,13 @@ runs:
       with:
         node-version: "18.x"
 
-    - name: Use cached node_modules
-      uses: actions/cache@master
-      with:
-        path: node_modules
-        key: nodeModules-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          nodeModules-
+    # - name: Use cached node_modules
+    #   uses: actions/cache@master
+    #   with:
+    #     path: node_modules
+    #     key: nodeModules-${{ hashFiles('**/yarn.lock') }}
+    #     restore-keys: |
+    #       nodeModules-
 
     - name: Install dependencies
       shell: bash
@@ -46,17 +46,18 @@ runs:
     - name: Build Development
       shell: bash
       env:
-        DB_HOST: ${{inputs.DB_HOST}}
-        DB_PORT: ${{inputs.DB_PORT}}
-        DB_USERNAME: ${{inputs.DB_USERNAME}}
-        DB_PASSWORD: ${{inputs.DB_PASSWORD}}
-        DB_DATABASE: ${{inputs.DB_DATABASE}}
+        DB_HOST: ${{inputs.HOST}}
+        DB_PORT: ${{inputs.PORT}}
+        DB_USERNAME: ${{inputs.USERNAME}}
+        DB_PASSWORD: ${{inputs.PASSWORD}}
+        DB_DATABASE: ${{inputs.DATABASE}}
       run: |
         echo "DB_HOST=$DB_HOST
         DB_PORT=$DB_PORT
         DB_USERNAME=$DB_USERNAME
         DB_PASSWORD=$DB_PASSWORD
-        DB_DATABASE=$DB_DATABASE" >> .env
+        DB_DATABASE=$DB_DATABASE
+        PORT=3000" >> .env
         npm run build
 
     - name: Archive Production Artifact
