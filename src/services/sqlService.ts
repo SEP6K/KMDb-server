@@ -11,6 +11,7 @@ import {
   YearRating,
   FavouriteMovies,
   UserInfo,
+  Reviews,
 } from "../models/models.js";
 
 export async function queryMoviesByTitle(title: string): Promise<Movies[]> {
@@ -236,6 +237,18 @@ export async function saveFavouriteMovies(favemoviesexpress: FavouriteMovies) {
     favemovies.save({
       user_id: favemoviesexpress.user_id,
       movie_id: favemoviesexpress.movie_id,
+    });
+  });
+}
+
+export async function saveReviews(userReviews: Reviews) {
+  return await connection.then((ds) => {
+    const usrReviews = ds.getRepository(Reviews);
+    usrReviews.save({
+      movie_id: userReviews.movie_id,
+      user_id: userReviews.user_id,
+      user_comments: userReviews.user_comments,
+      user_ratings: userReviews.user_ratings,
     });
   });
 }

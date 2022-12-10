@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import express from "express";
 import "reflect-metadata";
 import { connection } from "./models/data-source.js";
-import { FavouriteMovies, Movies, UserInfo } from "./models/models.js";
+import { FavouriteMovies, Movies, UserInfo, Reviews } from "./models/models.js";
 import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
 import * as sqlService from "./services/sqlService.js";
 dotenv.config();
@@ -94,6 +94,15 @@ app.post("/favouritemovies", async (req, res) => {
   const favemovies = req.body;
 
   sqlService.saveFavouriteMovies(favemovies);
+
+  res.send();
+});
+
+app.post("/reviews", async (req, res) => {
+  const userReviews = req.body;
+
+  sqlService.saveReviews(userReviews);
+
   res.send();
 });
 

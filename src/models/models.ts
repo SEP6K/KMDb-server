@@ -76,6 +76,18 @@ export class FavouriteMovies {
   movie_id!: number;
 }
 
+@Entity({ name: "reviews" })
+export class Reviews {
+  @PrimaryColumn()
+  movie_id!: number;
+  @PrimaryColumn()
+  user_id!: string;
+  @Column()
+  user_comments!: string;
+  @Column()
+  user_ratings!: number;
+}
+
 export type YearRating = {
   avgRating: number;
   year: number;
