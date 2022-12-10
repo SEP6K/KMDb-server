@@ -83,23 +83,18 @@ app.get("/movie/enriched/:id", async (req, res) => {
 });
 
 app.post("/userinfo", async (req, res) => {
-  const userinformation = parseInt(req.body);
+  const userinformation = req.body;
 
-  const enrichMovie = await movieEnrichmentService.enrichMovie(userinformation);
+  sqlService.saveUserInfo(userinformation);
 
-  if (enrichMovie) res.send(enrichMovie);
-  else res.status(204).send();
+  res.send();
 });
 
 app.post("/favouritemovies", async (req, res) => {
-  const favouritemovies = parseInt(req.body);
+  const favemovies = req.body;
 
-  const enrichMovies = await movieEnrichmentService.enrichMovie(
-    favouritemovies
-  );
-
-  if (enrichMovies) res.send(enrichMovies);
-  else res.status(204).send();
+  sqlService.saveFavouriteMovies(favemovies);
+  res.send();
 });
 
 app.listen(port, () => {

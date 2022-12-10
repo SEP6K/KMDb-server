@@ -216,3 +216,26 @@ export async function queryTopStars(count: number) {
       });
   });
 }
+
+export async function saveUserInfo(userinformation: UserInfo) {
+  return await connection.then((ds) => {
+    const userinfo = ds.getRepository(UserInfo);
+    userinfo.save({
+      user_id: userinformation.user_id,
+      first_name: userinformation.first_name,
+      last_name: userinformation.last_name,
+      gender: userinformation.gender,
+      date_of_birth: userinformation.date_of_birth,
+    });
+  });
+}
+
+export async function saveFavouriteMovies(favemoviesexpress: FavouriteMovies) {
+  return await connection.then((ds) => {
+    const favemovies = ds.getRepository(FavouriteMovies);
+    favemovies.save({
+      user_id: favemoviesexpress.user_id,
+      movie_id: favemoviesexpress.movie_id,
+    });
+  });
+}
