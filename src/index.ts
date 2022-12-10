@@ -1,10 +1,10 @@
 import * as dotenv from "dotenv";
 import express from "express";
 import "reflect-metadata";
-import { connection } from "./models/data-source.js";
-import { FavouriteMovies, Movies, UserInfo } from "./models/models.js";
+import * as tmdbApi from "./apis/tmdbApi.js";
 import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
 import * as sqlService from "./services/sqlService.js";
+
 dotenv.config();
 
 const app = express();
@@ -42,6 +42,26 @@ app.get("/movie/id/:id", async (req, res) => {
 
   const movie = await sqlService.queryMovieById(idQuery);
   res.send(movie);
+});
+
+app.get("/movie/similar/:userId", async (req, res) => {
+  const userIdParam = req.params.userId
+    ? req.params.userId.toString()
+    : undefined;
+  console.log(userIdParam);
+
+  const favouriteMoviesList = await sqlService.getFavouritesListForUser(
+    userIdParam
+  );
+
+  console.log({ favouriteMoviesList });
+
+  let similarMovies: tmdbApi.TmdbMovieResponse[] = await Promise.all(
+    favouriteMoviesList.map(async (element) => {
+      return await tmdbApi.getSimilarMovies(element.movie_id);
+    })
+  );
+  res.send(similarMovies);
 });
 
 app.get("/chart/ratings", async (req, res) => {

@@ -67,6 +67,13 @@ export type TmdbMovieResponse = {
   vote_count: number;
 };
 
+type SimilarMoviesResponse = {
+  page: number;
+  results: TmdbMovieResponse[];
+  total_pages: number;
+  total_results: number;
+};
+
 export async function getMovieById(id: number) {
   return await fetch(API_URL + `/movie/${appendId(id)}?api_key=${API_KEY}`, {
     headers: {
@@ -81,12 +88,36 @@ export async function getMovieById(id: number) {
     });
 }
 
+export async function getSimilarMovies(id: number): Promise<TmdbMovieResponse> {
+  return await fetch(
+    API_URL + `/movie/${appendId(id)}/similar?api_key=${API_KEY}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      method: "get",
+    }
+  )
+    .then((response: any) => response.json())
+    .then((response: SimilarMoviesResponse) => {
+      return response.results;
+    })
+    .then((similarMovies: TmdbMovieResponse[]) => {
+      return similarMovies[0];
+    })
+    .then((similarMovie: TmdbMovieResponse) => {
+      return improveResponse(similarMovie);
+    });
+}
+
 function appendId(id: number): string {
   return `tt${id}`;
 }
 
 function improveResponse(movie: TmdbMovieResponse): TmdbMovieResponse {
-  movie.backdrop_path = "https://image.tmdb.org/t/p/w500" + movie.backdrop_path;
-  movie.poster_path = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+  movie.backdrop_path =
+    "https://image.tmdb.org/t/p/original" + movie.backdrop_path;
+  movie.poster_path = "https://image.tmdb.org/t/p/original" + movie.poster_path;
   return movie;
 }

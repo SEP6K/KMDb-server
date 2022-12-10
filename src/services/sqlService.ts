@@ -3,14 +3,14 @@ import { connection } from "../models/data-source.js";
 import {
   ActorWithMovies,
   Directors,
+  FavouriteMovies,
   Movies,
   People,
   Ratings,
   Stars,
+  UserInfo,
   YearlyActors,
   YearRating,
-  FavouriteMovies,
-  UserInfo,
 } from "../models/models.js";
 
 export async function queryMoviesByTitle(title: string): Promise<Movies[]> {
@@ -203,5 +203,21 @@ export async function saveFavouriteMovies(favemoviesexpress: FavouriteMovies) {
       user_id: favemoviesexpress.user_id,
       movie_id: favemoviesexpress.movie_id,
     });
+  });
+}
+
+export async function getFavouritesListForUser(
+  userId: string
+): Promise<FavouriteMovies[]> {
+  return await connection.then((ds) => {
+    const favouritemoviesRepo = ds.getRepository(FavouriteMovies);
+
+    return favouritemoviesRepo
+      .createQueryBuilder("fav")
+      .where("fav.user_id = :id", { id: userId })
+      .getMany()
+      .then((favourites) => {
+        return favourites;
+      });
   });
 }
