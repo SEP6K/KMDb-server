@@ -83,30 +83,17 @@ app.get("/movie/enriched/:id", async (req, res) => {
 });
 
 app.post("/userinfo", async (req, res) => {
-  const userinformation: UserInfo = req.body;
+  const userinformation = req.body;
 
-  await connection.then((ds) => {
-    const userinfo = ds.getRepository(UserInfo);
-    userinfo.save({
-      user_id: userinformation.user_id,
-      first_name: userinformation.first_name,
-      last_name: userinformation.last_name,
-      gender: userinformation.gender,
-      date_of_birth: userinformation.date_of_birth,
-    });
-  });
+  sqlService.saveUserInfo(userinformation);
+
+  res.send();
 });
 
 app.post("/favouritemovies", async (req, res) => {
-  const favouritemoviesexpress: FavouriteMovies = req.body;
+  const favemovies = req.body;
 
-  await connection.then((ds) => {
-    const favemovies = ds.getRepository(FavouriteMovies);
-    favemovies.save({
-      user_id: favouritemoviesexpress.user_id,
-      movie_id: favouritemoviesexpress.movie_id,
-    });
-  });
+  sqlService.saveFavouriteMovies(favemovies);
   res.send();
 });
 

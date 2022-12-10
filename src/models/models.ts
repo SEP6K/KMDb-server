@@ -57,7 +57,7 @@ export class Stars {
 @Entity({ name: "userinfo" })
 export class UserInfo {
   @PrimaryColumn()
-  user_id!: number;
+  user_id!: string;
   @Column()
   first_name!: string;
   @Column()
@@ -71,7 +71,7 @@ export class UserInfo {
 @Entity({ name: "favouritemovies" })
 export class FavouriteMovies {
   @PrimaryColumn()
-  user_id!: number;
+  user_id!: string;
   @PrimaryColumn()
   movie_id!: number;
 }

@@ -1,7 +1,7 @@
 import * as omdbApi from "../apis/omdbApi.js";
-import { connection } from "../models/data-source.js";
 import { Movies, People, Ratings } from "../models/models.js";
 import * as sqlService from "./sqlService.js";
+import * as tmdbApi from "../apis/tmdbApi.js";
 
 type EnrichedMovie = {
   title: string;
@@ -17,7 +17,8 @@ type EnrichedMovie = {
   boxOffice: string;
   id: number;
   year: number;
-  rating: number;
+  backdropPath: string;
+  posterPath: string;
 };
 
 type Person = {
@@ -27,17 +28,24 @@ type Person = {
 };
 
 export async function enrichMovie(movieId: number): Promise<EnrichedMovie> {
-  //   let dbActors: People[] = [];
   const dbMovie = await sqlService.queryMovieById(movieId);
   const dbRating = await sqlService.queryRatingByMovieId(movieId);
   const dbDirector = await sqlService.getMovieDirector(movieId);
 
   const dbStars = await sqlService.getMovieStars(movieId);
+  const tmdbMovie = await tmdbApi.getMovieById(movieId);
 
   const omdbMovie = await omdbApi.getMovieById(movieId);
 
   if (dbMovie && omdbMovie)
-    return mapMovie(dbMovie, dbRating, dbDirector, dbStars, omdbMovie);
+    return mapMovie(
+      dbMovie,
+      dbRating,
+      dbDirector,
+      dbStars,
+      omdbMovie,
+      tmdbMovie
+    );
   else return null;
 }
 
@@ -46,7 +54,8 @@ function mapMovie(
   dbRating: Ratings,
   dbDirector: People,
   dbActors: People[],
-  omdbMovie: omdbApi.OmdbMovieResponse
+  omdbMovie: omdbApi.OmdbMovieResponse,
+  tmdbMovie: tmdbApi.TmdbMovieResponse
 ): EnrichedMovie {
   const mappedMovie: EnrichedMovie = {
     title: dbMovie.title,
@@ -66,7 +75,8 @@ function mapMovie(
     awards: omdbMovie.Awards,
     posterUrl: omdbMovie.Poster,
     boxOffice: omdbMovie.BoxOffice,
-    rating: dbRating.rating,
+    backdropPath: tmdbMovie.backdrop_path,
+    posterPath: tmdbMovie.poster_path,
   };
 
   return mappedMovie;
