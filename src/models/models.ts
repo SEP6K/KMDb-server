@@ -3,10 +3,9 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryColumn,
+  Relation,
 } from "typeorm";
 
 @Entity()
@@ -16,7 +15,7 @@ export class People {
   @Column()
   name!: string;
   @Column()
-  birth!: string;
+  birth!: number;
 }
 
 @Entity()
@@ -76,3 +75,19 @@ export class FavouriteMovies {
   @PrimaryColumn()
   movie_id!: number;
 }
+
+export type YearRating = {
+  avgRating: number;
+  year: number;
+};
+
+export type YearlyActors = {
+  count: number;
+  year: number;
+};
+
+export type ActorWithMovies = {
+  moviesStarred: number;
+  name: string;
+  person_id: number;
+};

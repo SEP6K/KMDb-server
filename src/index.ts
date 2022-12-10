@@ -44,6 +44,29 @@ app.get("/movie/id/:id", async (req, res) => {
   res.send(movie);
 });
 
+app.get("/chart/ratings", async (req, res) => {
+  const yearlyRatings = await sqlService.queryAverageMovieRatings();
+  res.send(yearlyRatings);
+});
+
+app.get("/chart/actors", async (req, res) => {
+  const fromYearQuery = req.query.from
+    ? parseInt(req.query.from.toString())
+    : 1850;
+  const toYearQuery = req.query.to ? parseInt(req.query.to.toString()) : 2030;
+  const yearlyActors = await sqlService.queryActorsBornYearly(
+    fromYearQuery,
+    toYearQuery
+  );
+  res.send(yearlyActors);
+});
+
+app.get("/chart/topStars/:count", async (req, res) => {
+  const countQuery = parseInt(req.params.count.toString());
+  const topStars = await sqlService.queryTopStars(countQuery);
+  res.send(topStars);
+});
+
 app.get("/movie/enriched/:id", async (req, res) => {
   const idParam = parseInt(req.params.id.toString());
   const enrichedMovie = await movieEnrichmentService.enrichMovie(idParam);
