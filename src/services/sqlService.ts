@@ -125,13 +125,17 @@ export async function queryPersonById(personId: number): Promise<People> {
   });
 }
 
-export async function queryAverageMovieRatings() {
+export async function queryAverageMovieRatings(
+  fromYear: number,
+  toYear: number
+) {
   return await connection.then(async (ds) => {
     return await ds
       .query(
         `SELECT AVG(rating) as avgRating, CAST(year AS int) AS year 
          FROM movies inner join ratings r 
          ON movies.movie_id = r.movie_id
+         WHERE year BETWEEN ${fromYear} and ${toYear}
          GROUP BY year;`
       )
       .then((res: YearRating[]) => {

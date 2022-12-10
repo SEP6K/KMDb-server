@@ -45,7 +45,14 @@ app.get("/movie/id/:id", async (req, res) => {
 });
 
 app.get("/chart/ratings", async (req, res) => {
-  const yearlyRatings = await sqlService.queryAverageMovieRatings();
+  const fromYearQuery = req.query.from
+    ? parseInt(req.query.from.toString())
+    : 1970;
+  const toYearQuery = req.query.to ? parseInt(req.query.to.toString()) : 2030;
+  const yearlyRatings = await sqlService.queryAverageMovieRatings(
+    fromYearQuery,
+    toYearQuery
+  );
   res.send(yearlyRatings);
 });
 
