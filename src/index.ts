@@ -1,7 +1,12 @@
+import * as dotenv from "dotenv";
 import express from "express";
 import "reflect-metadata";
 import { connection } from "./models/data-source.js";
+<<<<<<< HEAD
 import { Movies, UserInfo, FavouriteMovies } from "./models/models.js";
+=======
+import { FavouriteMovies, Movies, UserInfo } from "./models/models.js";
+>>>>>>> dev
 import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
 import * as dotenv from "dotenv";
 import * as sqlService from "./services/sqlService.js";
@@ -16,29 +21,62 @@ app.get("/", async (req, res) => {
   res.send("Hello world");
 });
 
-app.get("/movie", async (req, res) => {
-  const titleQuery = req.query.title ? req.query.title.toString() : undefined;
+app.get("/movie/title/:title", async (req, res) => {
+  const titleQuery = req.params.title ? req.params.title.toString() : undefined;
   console.log(titleQuery);
 
-  const yearQuery = req.query.year
-    ? parseInt(req.query.year.toString())
+  const movies = await sqlService.queryMoviesByTitle(titleQuery);
+  res.send(movies);
+});
+
+app.get("/movie/year/:year", async (req, res) => {
+  const yearQuery = req.params.year
+    ? parseInt(req.params.year.toString())
     : undefined;
   console.log(yearQuery);
 
-  if (titleQuery) {
-    if (yearQuery) {
-      // query both by year and title
-      sqlService.queryMoviesByTitleAndYear(titleQuery, yearQuery);
-    } else {
-      // query only by title
-      sqlService.queryMoviesByTitle(titleQuery);
-    }
-  } else {
-    if (yearQuery) {
-      // query only by year
-      sqlService.queryMovieByYear(yearQuery);
-    }
-  }
+  const movies = await sqlService.queryMoviesByYear(yearQuery);
+  res.send(movies);
+});
+
+app.get("/movie/id/:id", async (req, res) => {
+  const idQuery = req.params.id
+    ? parseInt(req.params.id.toString())
+    : undefined;
+  console.log(idQuery);
+
+  const movie = await sqlService.queryMovieById(idQuery);
+  res.send(movie);
+});
+
+app.get("/chart/ratings", async (req, res) => {
+  const fromYearQuery = req.query.from
+    ? parseInt(req.query.from.toString())
+    : 1970;
+  const toYearQuery = req.query.to ? parseInt(req.query.to.toString()) : 2030;
+  const yearlyRatings = await sqlService.queryAverageMovieRatings(
+    fromYearQuery,
+    toYearQuery
+  );
+  res.send(yearlyRatings);
+});
+
+app.get("/chart/actors", async (req, res) => {
+  const fromYearQuery = req.query.from
+    ? parseInt(req.query.from.toString())
+    : 1850;
+  const toYearQuery = req.query.to ? parseInt(req.query.to.toString()) : 2030;
+  const yearlyActors = await sqlService.queryActorsBornYearly(
+    fromYearQuery,
+    toYearQuery
+  );
+  res.send(yearlyActors);
+});
+
+app.get("/chart/topStars/:count", async (req, res) => {
+  const countQuery = parseInt(req.params.count.toString());
+  const topStars = await sqlService.queryTopStars(countQuery);
+  res.send(topStars);
 });
 
 app.get("/movie/enriched/:id", async (req, res) => {
