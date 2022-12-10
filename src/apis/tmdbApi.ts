@@ -42,9 +42,9 @@ type Languages = {
 export type TmdbMovieResponse = {
   adult: boolean;
   backdrop_path: string;
-  belongs_to_collection: Collection;
+  belongs_to_collection: Collection[];
   budget: number;
-  genres: Genre;
+  genres: Genre[];
   homepage: string;
   id: number;
   imdb_id: string;
@@ -53,12 +53,12 @@ export type TmdbMovieResponse = {
   overview: string;
   popularity: number;
   poster_path: string;
-  production_companies: ProductionCompanies;
-  production_countries: PorductionCountries;
+  production_companies: ProductionCompanies[];
+  production_countries: PorductionCountries[];
   release_date: string;
   revenue: number;
   runtime: 121;
-  spoken_languages: Languages;
+  spoken_languages: Languages[];
   status: string;
   tagline: string;
   title: string;
@@ -66,3 +66,21 @@ export type TmdbMovieResponse = {
   vote_average: number;
   vote_count: number;
 };
+
+export async function getMovieById(id: number) {
+  return await fetch(API_URL + `?apikey=${API_KEY}&i=${appendId(id)}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    method: "get",
+  })
+    .then((response: any) => response.json())
+    .then((response: TmdbMovieResponse) => {
+      return response;
+    });
+}
+
+function appendId(id: number): string {
+  return `tt${id}`;
+}
