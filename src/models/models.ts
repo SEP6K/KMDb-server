@@ -34,9 +34,6 @@ export class Movies {
   title!: string;
   @Column()
   year!: number;
-  // @OneToOne(() => Movies)
-  // @JoinColumn()
-  // rating!: Relation<Ratings>;
 }
 
 @Entity()
@@ -47,9 +44,6 @@ export class Ratings {
   rating!: number;
   @Column()
   votes!: number;
-  // @OneToOne(() => Movies)
-  // @JoinColumn()
-  // movie!: Relation<Movies>;
 }
 
 @Entity()
@@ -81,3 +75,13 @@ export class FavouriteMovies {
   @PrimaryColumn()
   movie_id!: number;
 }
+
+export type YearRating = {
+  avgRating: number;
+  year: number;
+};
+
+export type YearlyActors = {
+  count: number;
+  year: number;
+};

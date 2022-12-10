@@ -8,9 +8,9 @@ type EnrichedMovie = {
   releaseDate: string;
   runtime: string;
   genre: string;
-  director: Director;
+  director: Person;
   writers: string;
-  actors: string;
+  actors: Person[];
   plotDescription: string;
   awards: string;
   posterUrl: string;
@@ -20,7 +20,7 @@ type EnrichedMovie = {
   rating: number;
 };
 
-type Director = {
+type Person = {
   id: number;
   name: string;
   birth: number;
@@ -30,10 +30,20 @@ export async function enrichMovie(movieId: number): Promise<EnrichedMovie> {
   const dbMovie = await sqlService.queryMovieById(movieId);
   const dbRating = await sqlService.queryRatingByMovieId(movieId);
   const dbDirector = await sqlService.getMovieDirector(movieId);
+
+  const dbStars = await sqlService.getMovieStars(movieId);
+  console.log({ dbStars });
+  let dbActors: People[] = [];
+//   dbStars.forEach(async (star) => {
+//     const actor = await sqlService.queryPersonById(star.person_id);
+//     dbActors.push(actor);
+//   });
+//   console.log({ dbActors });
+
   const omdbMovie = await omdbApi.getMovieById(movieId);
 
   if (dbMovie && omdbMovie)
-    return mapMovie(dbMovie, dbRating, dbDirector, omdbMovie);
+    return mapMovie(dbMovie, dbRating, dbDirector, dbActors, omdbMovie);
   else return null;
 }
 
@@ -41,6 +51,7 @@ function mapMovie(
   dbMovie: Movies,
   dbRating: Ratings,
   dbDirector: People,
+  dbActors: People[],
   omdbMovie: omdbApi.OmdbMovieResponse
 ): EnrichedMovie {
   const mappedMovie: EnrichedMovie = {
@@ -54,9 +65,9 @@ function mapMovie(
       id: dbDirector.id,
       name: dbDirector.name,
       birth: dbDirector.birth,
-    } as Director,
+    } as Person,
     writers: omdbMovie.Writer,
-    actors: omdbMovie.Actors,
+    actors: mapActors(dbActors),
     plotDescription: omdbMovie.Plot,
     awards: omdbMovie.Awards,
     posterUrl: omdbMovie.Poster,
@@ -65,4 +76,17 @@ function mapMovie(
   };
 
   return mappedMovie;
+}
+
+function mapActors(dbActors: People[]): Person[] {
+  let mappedActors: Person[] = [];
+
+  dbActors.forEach((actor) => {
+    mappedActors.push({
+      id: actor.id,
+      name: actor.name,
+      birth: actor.birth,
+    } as Person);
+  });
+  return mappedActors;
 }
