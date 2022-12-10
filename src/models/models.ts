@@ -59,9 +59,7 @@ export class UserInfo {
   @PrimaryColumn()
   user_id!: string;
   @Column()
-  first_name!: string;
-  @Column()
-  last_name!: string;
+  user_name!: string;
   @Column()
   gender!: string;
   @Column()

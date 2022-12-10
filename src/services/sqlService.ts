@@ -223,8 +223,7 @@ export async function saveUserInfo(userinformation: UserInfo) {
     const userinfo = ds.getRepository(UserInfo);
     userinfo.save({
       user_id: userinformation.user_id,
-      first_name: userinformation.first_name,
-      last_name: userinformation.last_name,
+      user_name: userinformation.user_name,
       gender: userinformation.gender,
       date_of_birth: userinformation.date_of_birth,
     });
