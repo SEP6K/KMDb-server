@@ -2,19 +2,12 @@ import * as dotenv from "dotenv";
 import { DataSource } from "typeorm";
 import {
   Directors,
-<<<<<<< HEAD
-=======
   FavouriteMovies,
->>>>>>> dev
   Movies,
   People,
   Ratings,
   Stars,
   UserInfo,
-<<<<<<< HEAD
-  FavouriteMovies,
-=======
->>>>>>> dev
 } from "./models.js";
 
 dotenv.config({

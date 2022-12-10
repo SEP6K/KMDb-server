@@ -1,8 +1,5 @@
 import { dir } from "console";
 import { connection } from "../models/data-source.js";
-<<<<<<< HEAD
-import { FavouriteMovies, Movies, UserInfo } from "../models/models.js";
-=======
 import {
   ActorWithMovies,
   Directors,
@@ -12,8 +9,9 @@ import {
   Stars,
   YearlyActors,
   YearRating,
+  FavouriteMovies,
+  UserInfo,
 } from "../models/models.js";
->>>>>>> dev
 
 export async function queryMoviesByTitle(title: string): Promise<Movies[]> {
   console.log("query movie by title" + title);
@@ -61,7 +59,6 @@ export async function queryMovieById(id: number): Promise<Movies> {
   });
 }
 
-<<<<<<< HEAD
 export async function queryMoviesByFavourites(
   movie_id: number,
   user_id: number
@@ -78,7 +75,9 @@ export async function queryMoviesByFavourites(
       .getOne()
       .then((movieQueried) => {
         return movieQueried;
-=======
+      });
+  });
+}
 export async function queryRatingByMovieId(id: number): Promise<Ratings> {
   return await connection.then((ds) => {
     const ratingsRepo = ds.getRepository(Ratings);
@@ -89,12 +88,10 @@ export async function queryRatingByMovieId(id: number): Promise<Ratings> {
       .getOne()
       .then((rating) => {
         return rating;
->>>>>>> dev
       });
   });
 }
 
-<<<<<<< HEAD
 export async function queryMoviesForUserInfo(
   user_id: number
 ): Promise<UserInfo> {
@@ -107,7 +104,9 @@ export async function queryMoviesForUserInfo(
       .getOne()
       .then((movieQueried) => {
         return movieQueried;
-=======
+      });
+  });
+}
 export async function getMovieDirector(movieId: number): Promise<People> {
   return await connection.then((ds) => {
     const directorsRepo = ds.getRepository(Directors);
@@ -214,7 +213,6 @@ export async function queryTopStars(count: number) {
       .then((res: ActorWithMovies[]) => {
         console.log({ res });
         return res;
->>>>>>> dev
       });
   });
 }

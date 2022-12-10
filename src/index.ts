@@ -2,13 +2,8 @@ import * as dotenv from "dotenv";
 import express from "express";
 import "reflect-metadata";
 import { connection } from "./models/data-source.js";
-<<<<<<< HEAD
-import { Movies, UserInfo, FavouriteMovies } from "./models/models.js";
-=======
 import { FavouriteMovies, Movies, UserInfo } from "./models/models.js";
->>>>>>> dev
 import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
-import * as dotenv from "dotenv";
 import * as sqlService from "./services/sqlService.js";
 dotenv.config();
 
