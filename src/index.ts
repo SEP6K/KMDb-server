@@ -61,6 +61,12 @@ app.get("/chart/actors", async (req, res) => {
   res.send(yearlyActors);
 });
 
+app.get("/chart/topStars/:count", async (req, res) => {
+  const countQuery = parseInt(req.params.count.toString());
+  const topStars = await sqlService.queryTopStars(countQuery);
+  res.send(topStars);
+});
+
 app.get("/movie/enriched/:id", async (req, res) => {
   const idParam = parseInt(req.params.id.toString());
   const enrichedMovie = await movieEnrichmentService.enrichMovie(idParam);

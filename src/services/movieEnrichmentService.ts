@@ -27,23 +27,17 @@ type Person = {
 };
 
 export async function enrichMovie(movieId: number): Promise<EnrichedMovie> {
+  //   let dbActors: People[] = [];
   const dbMovie = await sqlService.queryMovieById(movieId);
   const dbRating = await sqlService.queryRatingByMovieId(movieId);
   const dbDirector = await sqlService.getMovieDirector(movieId);
 
   const dbStars = await sqlService.getMovieStars(movieId);
-  console.log({ dbStars });
-  let dbActors: People[] = [];
-//   dbStars.forEach(async (star) => {
-//     const actor = await sqlService.queryPersonById(star.person_id);
-//     dbActors.push(actor);
-//   });
-//   console.log({ dbActors });
 
   const omdbMovie = await omdbApi.getMovieById(movieId);
 
   if (dbMovie && omdbMovie)
-    return mapMovie(dbMovie, dbRating, dbDirector, dbActors, omdbMovie);
+    return mapMovie(dbMovie, dbRating, dbDirector, dbStars, omdbMovie);
   else return null;
 }
 

@@ -85,3 +85,9 @@ export type YearlyActors = {
   count: number;
   year: number;
 };
+
+export type ActorWithMovies = {
+  moviesStarred: number;
+  name: string;
+  person_id: number;
+};

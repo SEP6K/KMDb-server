@@ -1,6 +1,7 @@
 import { dir } from "console";
 import { connection } from "../models/data-source.js";
 import {
+  ActorWithMovies,
   Directors,
   Movies,
   People,
@@ -97,15 +98,12 @@ export async function getMovieStars(movieId: number): Promise<People[]> {
         },
       })
       .then(async (stars) => {
-        console.log({ stars });
-        let actors: People[] = [];
+        let actors: People[] = await Promise.all(
+          stars.map(async (star) => {
+            return await queryPersonById(star.person_id);
+          })
+        );
 
-        stars.forEach(async (star) => {
-          await queryPersonById(star.person_id).then((person) => {
-            actors.push(person);
-          });
-        });
-        console.log({ actors });
         return actors;
       });
   });
@@ -131,7 +129,10 @@ export async function queryAverageMovieRatings() {
   return await connection.then(async (ds) => {
     return await ds
       .query(
-        "SELECT AVG(rating) as avgRating, CAST(year AS int) AS year FROM movies inner join ratings r on movies.movie_id = r.movie_id GROUP BY year"
+        `SELECT AVG(rating) as avgRating, CAST(year AS int) AS year 
+         FROM movies inner join ratings r 
+         ON movies.movie_id = r.movie_id
+         GROUP BY year;`
       )
       .then((res: YearRating[]) => {
         return res;
@@ -151,6 +152,25 @@ export async function queryActorsBornYearly(fromYear: number, toYear: number) {
            GROUP BY birth;`
       )
       .then((res: YearlyActors[]) => {
+        console.log({ res });
+        return res;
+      });
+  });
+}
+
+export async function queryTopStars(count: number) {
+  return await connection.then(async (ds) => {
+    return await ds
+      .query(
+        `SELECT COUNT(movie_id) AS moviesStarred, name, person_id
+          FROM stars
+          INNER JOIN people p
+          ON p.id = stars.person_id
+          GROUP BY p.name, person_id
+          ORDER BY moviesStarred DESC
+          LIMIT ${count};`
+      )
+      .then((res: ActorWithMovies[]) => {
         console.log({ res });
         return res;
       });
