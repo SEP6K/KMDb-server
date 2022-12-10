@@ -9,6 +9,8 @@ import {
   Stars,
   YearlyActors,
   YearRating,
+  FavouriteMovies,
+  UserInfo,
 } from "../models/models.js";
 
 export async function queryMoviesByTitle(title: string): Promise<Movies[]> {
