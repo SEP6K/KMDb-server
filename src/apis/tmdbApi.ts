@@ -3,8 +3,8 @@ dotenv.config({
   debug: true,
 });
 
-const API_KEY = process.env.TMDB_KEY;
-const API_URL = "https://developers.themoviedb.org/";
+const API_KEY = process.env.TMDB_API_KEY;
+const API_URL = "https://api.themoviedb.org/3/";
 
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -28,7 +28,7 @@ type ProductionCompanies = {
   origin_country: string;
 };
 
-type PorductionCountries = {
+type ProductionCountries = {
   iso_3166_1: string;
   name: string;
 };
@@ -54,7 +54,7 @@ export type TmdbMovieResponse = {
   popularity: number;
   poster_path: string;
   production_companies: ProductionCompanies[];
-  production_countries: PorductionCountries[];
+  production_countries: ProductionCountries[];
   release_date: string;
   revenue: number;
   runtime: 121;
@@ -68,7 +68,7 @@ export type TmdbMovieResponse = {
 };
 
 export async function getMovieById(id: number) {
-  return await fetch(API_URL + `?apikey=${API_KEY}&i=${appendId(id)}`, {
+  return await fetch(API_URL + `/movie/${appendId(id)}?api_key=${API_KEY}`, {
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
@@ -77,10 +77,16 @@ export async function getMovieById(id: number) {
   })
     .then((response: any) => response.json())
     .then((response: TmdbMovieResponse) => {
-      return response;
+      return improveResponse(response);
     });
 }
 
 function appendId(id: number): string {
   return `tt${id}`;
+}
+
+function improveResponse(movie: TmdbMovieResponse): TmdbMovieResponse {
+  movie.backdrop_path = "https://image.tmdb.org/t/p/w500" + movie.backdrop_path;
+  movie.poster_path = "https://image.tmdb.org/t/p/w500" + movie.poster_path;
+  return movie;
 }

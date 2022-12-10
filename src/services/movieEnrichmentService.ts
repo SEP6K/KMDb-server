@@ -1,5 +1,4 @@
 import * as omdbApi from "../apis/omdbApi.js";
-import { connection } from "../models/data-source.js";
 import { Movies, People, Ratings } from "../models/models.js";
 import * as sqlService from "./sqlService.js";
 import * as tmdbApi from "../apis/tmdbApi.js";
@@ -29,7 +28,6 @@ type Person = {
 };
 
 export async function enrichMovie(movieId: number): Promise<EnrichedMovie> {
-  //   let dbActors: People[] = [];
   const dbMovie = await sqlService.queryMovieById(movieId);
   const dbRating = await sqlService.queryRatingByMovieId(movieId);
   const dbDirector = await sqlService.getMovieDirector(movieId);

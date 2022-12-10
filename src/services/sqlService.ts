@@ -9,8 +9,6 @@ import {
   Stars,
   YearlyActors,
   YearRating,
-  FavouriteMovies,
-  UserInfo,
 } from "../models/models.js";
 
 export async function queryMoviesByTitle(title: string): Promise<Movies[]> {
@@ -59,25 +57,6 @@ export async function queryMovieById(id: number): Promise<Movies> {
   });
 }
 
-export async function queryMoviesByFavourites(
-  movie_id: number,
-  user_id: number
-): Promise<FavouriteMovies> {
-  return await connection.then((ds) => {
-    const movieRepo = ds.getRepository(FavouriteMovies);
-
-    return movieRepo
-      .createQueryBuilder("favouritemovies")
-      .where(
-        "favouritemovies.movie_id = :movie_id AND favouritemovies.user_id = :user_id",
-        { user_id: user_id, movie_id: movie_id }
-      )
-      .getOne()
-      .then((movieQueried) => {
-        return movieQueried;
-      });
-  });
-}
 export async function queryRatingByMovieId(id: number): Promise<Ratings> {
   return await connection.then((ds) => {
     const ratingsRepo = ds.getRepository(Ratings);
@@ -92,21 +71,6 @@ export async function queryRatingByMovieId(id: number): Promise<Ratings> {
   });
 }
 
-export async function queryMoviesForUserInfo(
-  user_id: number
-): Promise<UserInfo> {
-  return await connection.then((ds) => {
-    const movieRepo = ds.getRepository(UserInfo);
-
-    return movieRepo
-      .createQueryBuilder("userinfo")
-      .where("userinfo.user_id = :user_id", { user_id: user_id })
-      .getOne()
-      .then((movieQueried) => {
-        return movieQueried;
-      });
-  });
-}
 export async function getMovieDirector(movieId: number): Promise<People> {
   return await connection.then((ds) => {
     const directorsRepo = ds.getRepository(Directors);
