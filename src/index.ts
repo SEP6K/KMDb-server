@@ -114,7 +114,24 @@ app.post("/favouritemovies", async (req, res) => {
   const favemovies = req.body;
 
   sqlService.saveFavouriteMovies(favemovies);
+
   res.send();
+});
+
+app.post("/reviews", async (req, res) => {
+  const userReviews = req.body;
+
+  sqlService.saveReviews(userReviews);
+
+  res.send();
+});
+
+app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
+  const userNameQuery = req.params.user_name
+    ? req.params.user_name.toString()
+    : "";
+  const user = await sqlService.searchForUserName(userNameQuery);
+  res.send(user);
 });
 
 app.listen(port, () => {

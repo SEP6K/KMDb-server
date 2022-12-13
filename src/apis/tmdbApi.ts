@@ -104,10 +104,10 @@ export async function getSimilarMovies(id: number): Promise<TmdbMovieResponse> {
       return response.results;
     })
     .then((similarMovies: TmdbMovieResponse[]) => {
-      return similarMovies[0];
+      if (similarMovies) return similarMovies[0];
     })
     .then((similarMovie: TmdbMovieResponse) => {
-      return improveResponse(similarMovie);
+      if (similarMovie) return improveResponse(similarMovie);
     });
 }
 

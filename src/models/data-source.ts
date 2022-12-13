@@ -8,6 +8,7 @@ import {
   Ratings,
   Stars,
   UserInfo,
+  Reviews,
 } from "./models.js";
 
 dotenv.config({
@@ -29,6 +30,7 @@ const dataSource = new DataSource({
     Stars,
     UserInfo,
     FavouriteMovies,
+    Reviews,
   ],
 });
 
