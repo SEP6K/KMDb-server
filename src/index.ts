@@ -106,6 +106,14 @@ app.post("/reviews", async (req, res) => {
   res.send();
 });
 
+app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
+  const userNameQuery = req.params.user_name
+    ? req.params.user_name.toString()
+    : "";
+  const user = await sqlService.searchForUserName(userNameQuery);
+  res.send(user);
+});
+
 app.listen(port, () => {
   console.log("listening on", 3000);
 });

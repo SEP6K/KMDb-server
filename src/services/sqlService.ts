@@ -251,3 +251,14 @@ export async function saveReviews(userReviews: Reviews) {
     });
   });
 }
+
+export async function searchForUserName(user_name: string): Promise<UserInfo> {
+  return await connection.then((ds) => {
+    const userForSearch = ds.getRepository(UserInfo);
+    return userForSearch
+      .findOne({ where: { user_name: user_name } })
+      .then((userName) => {
+        return userName;
+      });
+  });
+}
