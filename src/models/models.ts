@@ -59,9 +59,7 @@ export class UserInfo {
   @PrimaryColumn()
   user_id!: string;
   @Column()
-  first_name!: string;
-  @Column()
-  last_name!: string;
+  user_name!: string;
   @Column()
   gender!: string;
   @Column()
@@ -74,6 +72,18 @@ export class FavouriteMovies {
   user_id!: string;
   @PrimaryColumn()
   movie_id!: number;
+}
+
+@Entity({ name: "reviews" })
+export class Reviews {
+  @PrimaryColumn()
+  movie_id!: number;
+  @PrimaryColumn()
+  user_id!: string;
+  @Column()
+  user_comments!: string;
+  @Column()
+  user_ratings!: number;
 }
 
 export type YearRating = {

@@ -3,14 +3,15 @@ import { connection } from "../models/data-source.js";
 import {
   ActorWithMovies,
   Directors,
+  FavouriteMovies,
   Movies,
   People,
   Ratings,
+  Reviews,
   Stars,
+  UserInfo,
   YearlyActors,
   YearRating,
-  FavouriteMovies,
-  UserInfo,
 } from "../models/models.js";
 
 export async function queryMoviesByTitle(title: string): Promise<Movies[]> {
@@ -188,8 +189,7 @@ export async function saveUserInfo(userinformation: UserInfo) {
     const userinfo = ds.getRepository(UserInfo);
     userinfo.save({
       user_id: userinformation.user_id,
-      first_name: userinformation.first_name,
-      last_name: userinformation.last_name,
+      user_name: userinformation.user_name,
       gender: userinformation.gender,
       date_of_birth: userinformation.date_of_birth,
     });
@@ -203,5 +203,44 @@ export async function saveFavouriteMovies(favemoviesexpress: FavouriteMovies) {
       user_id: favemoviesexpress.user_id,
       movie_id: favemoviesexpress.movie_id,
     });
+  });
+}
+
+export async function saveReviews(userReviews: Reviews) {
+  return await connection.then((ds) => {
+    const usrReviews = ds.getRepository(Reviews);
+    usrReviews.save({
+      movie_id: userReviews.movie_id,
+      user_id: userReviews.user_id,
+      user_comments: userReviews.user_comments,
+      user_ratings: userReviews.user_ratings,
+    });
+  });
+}
+
+export async function searchForUserName(user_name: string): Promise<UserInfo> {
+  return await connection.then((ds) => {
+    const userForSearch = ds.getRepository(UserInfo);
+    return userForSearch
+      .findOne({ where: { user_name: user_name } })
+      .then((userName) => {
+        return userName;
+      });
+  });
+}
+
+export async function getFavouritesListForUser(
+  userId: string
+): Promise<FavouriteMovies[]> {
+  return await connection.then((ds) => {
+    const favouritemoviesRepo = ds.getRepository(FavouriteMovies);
+
+    return favouritemoviesRepo
+      .createQueryBuilder("fav")
+      .where("fav.user_id = :id", { id: userId })
+      .getMany()
+      .then((favourites) => {
+        return favourites;
+      });
   });
 }

@@ -1,9 +1,11 @@
+import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
-import cors from "cors";
 import "reflect-metadata";
+import * as tmdbApi from "./apis/tmdbApi.js";
 import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
 import * as sqlService from "./services/sqlService.js";
+
 dotenv.config();
 
 const app = express();
@@ -43,6 +45,26 @@ app.get("/movie/id/:id", async (req, res) => {
 
   const movie = await sqlService.queryMovieById(idQuery);
   res.send(movie);
+});
+
+app.get("/movie/similar/:userId", async (req, res) => {
+  const userIdParam = req.params.userId
+    ? req.params.userId.toString()
+    : undefined;
+  console.log(userIdParam);
+
+  const favouriteMoviesList = await sqlService.getFavouritesListForUser(
+    userIdParam
+  );
+
+  console.log({ favouriteMoviesList });
+
+  let similarMovies: tmdbApi.TmdbMovieResponse[] = await Promise.all(
+    favouriteMoviesList.map(async (element) => {
+      return await tmdbApi.getSimilarMovies(element.movie_id);
+    })
+  );
+  res.send(similarMovies);
 });
 
 app.get("/chart/ratings", async (req, res) => {
@@ -94,7 +116,34 @@ app.post("/favouritemovies", async (req, res) => {
   const favemovies = req.body;
 
   sqlService.saveFavouriteMovies(favemovies);
+
   res.send();
+});
+
+app.post("/reviews", async (req, res) => {
+  const userReviews = req.body;
+
+  sqlService.saveReviews(userReviews);
+
+  res.send();
+});
+
+app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
+  const userNameQuery = req.params.user_name
+    ? req.params.user_name.toString()
+    : "";
+  const user = await sqlService.searchForUserName(userNameQuery);
+  console.log(user);
+  if (user == null) {
+    res.status(404).send();
+    return;
+  } else {
+    const favouriteMoviesList = await sqlService.getFavouritesListForUser(
+      user.user_id
+    );
+
+    res.send(favouriteMoviesList);
+  }
 });
 
 app.all("*", function (req, res) {
