@@ -131,7 +131,17 @@ app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
     ? req.params.user_name.toString()
     : "";
   const user = await sqlService.searchForUserName(userNameQuery);
-  res.send(user);
+  console.log(user);
+  if (user == null) {
+    res.status(404).send();
+    return;
+  } else {
+    const favouriteMoviesList = await sqlService.getFavouritesListForUser(
+      user.user_id
+    );
+
+    res.send(favouriteMoviesList);
+  }
 });
 
 app.listen(port, () => {
