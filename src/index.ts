@@ -1,3 +1,4 @@
+import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
 import "reflect-metadata";
@@ -9,6 +10,8 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+
 const port = process.env.PORT || 3000;
 
 app.get("/", async (req, res) => {
@@ -106,7 +109,6 @@ app.post("/userinfo", async (req, res) => {
   const userinformation = req.body;
 
   sqlService.saveUserInfo(userinformation);
-
   res.send();
 });
 
@@ -142,6 +144,19 @@ app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
 
     res.send(favouriteMoviesList);
   }
+});
+
+app.all("*", function (req, res) {
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type, Accept,Authorization,Origin"
+  );
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 });
 
 app.listen(port, () => {
