@@ -1,14 +1,15 @@
 import * as dotenv from "dotenv";
 import express from "express";
+import cors from "cors";
 import "reflect-metadata";
-import { connection } from "./models/data-source.js";
-import { FavouriteMovies, Movies, UserInfo } from "./models/models.js";
 import * as movieEnrichmentService from "./services/movieEnrichmentService.js";
 import * as sqlService from "./services/sqlService.js";
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+
 const port = process.env.PORT || 3000;
 
 app.get("/", async (req, res) => {
@@ -86,7 +87,6 @@ app.post("/userinfo", async (req, res) => {
   const userinformation = req.body;
 
   sqlService.saveUserInfo(userinformation);
-
   res.send();
 });
 
@@ -95,6 +95,19 @@ app.post("/favouritemovies", async (req, res) => {
 
   sqlService.saveFavouriteMovies(favemovies);
   res.send();
+});
+
+app.all("*", function (req, res) {
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type, Accept,Authorization,Origin"
+  );
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 });
 
 app.listen(port, () => {
