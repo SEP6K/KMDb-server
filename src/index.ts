@@ -145,6 +145,19 @@ app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
     res.send(favouriteMoviesList);
   }
 });
+app.get("/userinfo/:userId", async (req, res) => {
+  const userIdQuery = req.params.userId ? req.params.userId.toString() : "";
+
+  const user = await sqlService.getUserById(userIdQuery);
+  console.log(user);
+
+  if (user == null) {
+    res.status(404).send();
+    return;
+  } else {
+    res.send(user.user_name);
+  }
+});
 
 app.all("*", function (req, res) {
   res.setHeader(

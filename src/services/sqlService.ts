@@ -229,6 +229,15 @@ export async function searchForUserName(user_name: string): Promise<UserInfo> {
   });
 }
 
+export async function getUserById(uId: string): Promise<UserInfo> {
+  return await connection.then((ds) => {
+    const userRepo = ds.getRepository(UserInfo);
+    return userRepo.findOne({ where: { user_id: uId } }).then((user) => {
+      return user;
+    });
+  });
+}
+
 export async function getFavouritesListForUser(
   userId: string
 ): Promise<FavouriteMovies[]> {
