@@ -128,6 +128,15 @@ app.post("/reviews", async (req, res) => {
   res.send();
 });
 
+app.get("/reviews/:movieId", async (req, res) => {
+  const movieIdQuery = req.params.movieId
+    ? parseInt(req.params.movieId.toString())
+    : 0;
+  const reviews = await sqlService.queryReviewsByMovieId(movieIdQuery);
+
+  res.send(reviews);
+});
+
 app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
   const userNameQuery = req.params.user_name
     ? req.params.user_name.toString()

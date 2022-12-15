@@ -253,3 +253,17 @@ export async function getFavouritesListForUser(
       });
   });
 }
+
+export async function queryReviewsByMovieId(id: number): Promise<Reviews[]> {
+  return await connection.then((ds) => {
+    const reviewsRepo = ds.getRepository(Reviews);
+
+    return reviewsRepo
+      .createQueryBuilder("review")
+      .where("review.movie_id = :id", { id: id })
+      .getMany()
+      .then((reviews) => {
+        return reviews;
+      });
+  });
+}
