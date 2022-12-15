@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { userInfo } from "os";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryColumn,
+  Relation,
+} from "typeorm";
 
 @Entity()
 export class People {
@@ -7,7 +15,7 @@ export class People {
   @Column()
   name!: string;
   @Column()
-  birth!: string;
+  birth!: number;
 }
 
 @Entity()
@@ -45,3 +53,51 @@ export class Stars {
   @PrimaryColumn()
   person_id!: number;
 }
+
+@Entity({ name: "userinfo" })
+export class UserInfo {
+  @PrimaryColumn()
+  user_id!: string;
+  @Column()
+  user_name!: string;
+  @Column()
+  gender!: string;
+  @Column()
+  date_of_birth!: string;
+}
+
+@Entity({ name: "favouritemovies" })
+export class FavouriteMovies {
+  @PrimaryColumn()
+  user_id!: string;
+  @PrimaryColumn()
+  movie_id!: number;
+}
+
+@Entity({ name: "reviews" })
+export class Reviews {
+  @PrimaryColumn()
+  movie_id!: number;
+  @PrimaryColumn()
+  user_id!: string;
+  @Column()
+  user_comments!: string;
+  @Column()
+  user_ratings!: number;
+}
+
+export type YearRating = {
+  avgRating: number;
+  year: number;
+};
+
+export type YearlyActors = {
+  count: number;
+  year: number;
+};
+
+export type ActorWithMovies = {
+  moviesStarred: number;
+  name: string;
+  person_id: number;
+};
