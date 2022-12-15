@@ -85,7 +85,8 @@ export async function getMovieDirector(movieId: number): Promise<People> {
         },
       })
       .then((director) => {
-        return queryPersonById(director.person_id);
+        if (director) return queryPersonById(director.person_id);
+        else return null;
       });
   });
 }
@@ -123,7 +124,8 @@ export async function queryPersonById(personId: number): Promise<People> {
         },
       })
       .then((person) => {
-        return person;
+        if (person) return person;
+        else return null;
       });
   });
 }
@@ -235,8 +237,9 @@ export async function searchForUserName(user_name: string): Promise<UserInfo> {
     const userForSearch = ds.getRepository(UserInfo);
     return userForSearch
       .findOne({ where: { user_name: user_name } })
-      .then((userName) => {
-        return userName;
+      .then((user) => {
+        if (user) return user;
+        else return null;
       });
   });
 }
@@ -245,7 +248,8 @@ export async function getUserById(uId: string): Promise<UserInfo> {
   return await connection.then((ds) => {
     const userRepo = ds.getRepository(UserInfo);
     return userRepo.findOne({ where: { user_id: uId } }).then((user) => {
-      return user;
+      if (user) return user;
+      else return null;
     });
   });
 }
