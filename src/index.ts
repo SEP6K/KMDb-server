@@ -128,6 +128,15 @@ app.post("/reviews", async (req, res) => {
   res.send();
 });
 
+app.get("/reviews/:movieId", async (req, res) => {
+  const movieIdQuery = req.params.movieId
+    ? parseInt(req.params.movieId.toString())
+    : 0;
+  const reviews = await sqlService.queryReviewsByMovieId(movieIdQuery);
+
+  res.send(reviews);
+});
+
 app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
   const userNameQuery = req.params.user_name
     ? req.params.user_name.toString()
@@ -143,6 +152,19 @@ app.get("/userinfo/favouritemovies/:user_name", async (req, res) => {
     );
 
     res.send(favouriteMoviesList);
+  }
+});
+app.get("/userinfo/:userId", async (req, res) => {
+  const userIdQuery = req.params.userId ? req.params.userId.toString() : "";
+
+  const user = await sqlService.getUserById(userIdQuery);
+  console.log(user);
+
+  if (user == null) {
+    res.status(404).send();
+    return;
+  } else {
+    res.send(user.user_name);
   }
 });
 

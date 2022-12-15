@@ -229,6 +229,15 @@ export async function searchForUserName(user_name: string): Promise<UserInfo> {
   });
 }
 
+export async function getUserById(uId: string): Promise<UserInfo> {
+  return await connection.then((ds) => {
+    const userRepo = ds.getRepository(UserInfo);
+    return userRepo.findOne({ where: { user_id: uId } }).then((user) => {
+      return user;
+    });
+  });
+}
+
 export async function getFavouritesListForUser(
   userId: string
 ): Promise<FavouriteMovies[]> {
@@ -241,6 +250,20 @@ export async function getFavouritesListForUser(
       .getMany()
       .then((favourites) => {
         return favourites;
+      });
+  });
+}
+
+export async function queryReviewsByMovieId(id: number): Promise<Reviews[]> {
+  return await connection.then((ds) => {
+    const reviewsRepo = ds.getRepository(Reviews);
+
+    return reviewsRepo
+      .createQueryBuilder("review")
+      .where("review.movie_id = :id", { id: id })
+      .getMany()
+      .then((reviews) => {
+        return reviews;
       });
   });
 }
