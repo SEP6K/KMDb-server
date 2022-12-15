@@ -1,12 +1,13 @@
 import * as omdbApi from "../apis/omdbApi.js";
+import * as tmdbApi from "../apis/tmdbApi.js";
 import { Movies, People, Ratings } from "../models/models.js";
 import * as sqlService from "./sqlService.js";
-import * as tmdbApi from "../apis/tmdbApi.js";
 
 type EnrichedMovie = {
   title: string;
   releaseDate: string;
   runtime: string;
+  rating: number;
   genre: string;
   director: Person;
   writers: string;
@@ -63,6 +64,7 @@ function mapMovie(
     year: dbMovie.year,
     releaseDate: omdbMovie.Released,
     runtime: omdbMovie.Runtime,
+    rating: dbRating.rating,
     genre: omdbMovie.Genre,
     director: {
       id: dbDirector.id,
