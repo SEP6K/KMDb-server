@@ -164,7 +164,7 @@ app.get("/userinfo/:userId", async (req, res) => {
     res.status(404).send();
     return;
   } else {
-    res.send(user.user_name);
+    res.send(user);
   }
 });
 
