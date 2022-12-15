@@ -120,6 +120,14 @@ app.post("/favouritemovies", async (req, res) => {
   res.send();
 });
 
+app.delete("/favouritemovies", async (req, res) => {
+  const favemovies = req.body;
+
+  sqlService.deleteFavouriteMovies(favemovies);
+
+  res.send();
+});
+
 app.post("/reviews", async (req, res) => {
   const userReviews = req.body;
 

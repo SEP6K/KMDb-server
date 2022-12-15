@@ -206,6 +206,18 @@ export async function saveFavouriteMovies(favemoviesexpress: FavouriteMovies) {
   });
 }
 
+export async function deleteFavouriteMovies(
+  favemoviesexpress: FavouriteMovies
+) {
+  return await connection.then((ds) => {
+    const favemovies = ds.getRepository(FavouriteMovies);
+    favemovies.delete({
+      user_id: favemoviesexpress.user_id,
+      movie_id: favemoviesexpress.movie_id,
+    });
+  });
+}
+
 export async function saveReviews(userReviews: Reviews) {
   return await connection.then((ds) => {
     const usrReviews = ds.getRepository(Reviews);
